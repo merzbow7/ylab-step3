@@ -6,30 +6,34 @@
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
 </head>
 <body>
-<main class="container">
-    <article class="row mt-5">
+<main class="container mt-2">
+    <article class="row">
         <section class="col-8">
-            <img src="data:image/jpeg;base64,{{ img }}" alt="123">
+            <img src="data:image/jpeg;base64,{{ img }}" alt="{{ choose }}">
+            {% set summary_text = summary.split() %}
+            <div class="text-center">
+                <strong>{{ summary_text[0] }}</strong> {{ summary_text[1] }}
+            </div>
         </section>
         <section class="col-4">
             <form class="geo-form" action="">
-                <select class="form-select mb-5" name="figure" aria-label="Choose a figure">
+                <select class="form-select mb-3" name="figure" aria-label="Choose a figure">
                     <option selected disabled>Choose a figure</option>
                     {% for figure in figures %}
                         {% if figure==choose %}
-                            <option value="{{ figure }}" selected>{{ figure }}</option>
-                        {% else %}
-                            <option value="{{ figure }}">{{ figure }}</option>
+                            {% set slc = "selected" %}
                         {% endif %}
+                        <option value="{{ figure }}" {{ slc }}>{{ figure }}</option>
                     {% endfor %}
                 </select>
                 {% for slot in slots %}
-                    <label for="{{ slot }}" class="form-label mt-5">{{ slot }}</label>
+                    <label for="{{ slot }}" class="form-label mt-3">{{ slot }}</label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control"
-                               id="{{ slot }}" name="{{ slot }}"
-                               aria-describedby="radius"
-                               value="{{ slots[slot] }}"
+                        <input
+                                type="text" class="form-control"
+                                id="{{ slot }}" name="{{ slot }}"
+                                aria-describedby="{{ slot }}"
+                                value="{{ slots[slot] }}"
                         >
                     </div>
                 {% endfor %}

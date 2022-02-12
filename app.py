@@ -4,27 +4,23 @@ from geometry import figure
 
 app = Flask("__file__")
 
-geometry_classes = {f'{cls}': '-'.join(getattr(figure, cls).__slots__)
-                    for cls in figure.__all__}
-print(geometry_classes)
-
 
 @app.route('/')
-def index():
-    print(request.args)
+def index() -> str:
     cls_name = request.args.get('figure', default='Circle', type=str)
     figure_class = getattr(figure, cls_name)
-    class_args = {attr: request.args.get(attr, default=1, type=float)
-                  for attr in figure_class.__slots__}
-    print(f"{cls_name=}")
-    print(f"{class_args=}")
+    slots = figure_class.__slots__
+    class_args = {attr: request.args.get(attr, type=float, default=10)
+                  for attr in slots}
     shape = figure_class(**class_args)
     img = shape.plot()
-    slots = {slot: class_args[slot] for slot in shape.__slots__}
+    summary = shape.get_summary()
+    slots = {slot: class_args[slot] for slot in slots}
     return render_template('index.html',
                            img=img,
                            slots=slots,
                            choose=cls_name,
+                           summary=summary,
                            figures=figure.__all__)
 
 

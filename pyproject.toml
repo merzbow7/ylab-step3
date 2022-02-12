@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "ylab-step3"
 version = "0.1.0"
-description = ""
+description = "Y Lab step 3 Homework"
 authors = ["Sevenamber <sevenamber@gmail.com>"]
 
 [tool.nitpick]
@@ -12,7 +12,6 @@ python = "^3.9"
 Flask = "^2.0.2"
 matplotlib = "^3.5.1"
 numpy = "^1.22.2"
-WTForms = "^3.0.1"
 
 [tool.poetry.dev-dependencies]
 wemake-python-styleguide = "^0.15.3"
