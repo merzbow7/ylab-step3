@@ -1,6 +1,6 @@
 __all__ = [
     'Circle', 'Parallelogram', 'Square', 'Triangle', 'Trapeze', 'Rhombus',
-    'Cylinder', 'Cone', 'Pyramid'
+    'Sphere', 'Parallelepiped', 'Cube', 'Cylinder', 'Cone', 'Pyramid',
 ]
 
 import base64
@@ -31,7 +31,7 @@ class BaseFigure(object):
         return Point(0, 0), 'None'
 
     def plot_annex(self, axes: Axes, deg: int = 0, delta_y: int = 0):
-        coord, label = self.get_sub_coord()
+        coord, label, *zc = self.get_sub_coord()
         translate = self.translate(deg=deg, delta_y=delta_y)
         transform = translate + axes.transData
         axes.plot(*coord, color='red', label=label, transform=transform)
@@ -78,7 +78,7 @@ class BaseFigure(object):
         plt.savefig(pic_io_bytes, dpi=130, format='jpg')
         pic_io_bytes.seek(0)
         b64 = base64.b64encode(pic_io_bytes.read())
-        pic_hash = b64.decode('utf-8').replace('\n', '')
+        pic_hash = b64.decode('utf-8')
         return pic_hash
 
     @property
@@ -101,7 +101,7 @@ class Circle(BaseFigure):
 
     @property
     def radius_coord(self):
-        return zip(Point(0, 0), Point(self.radius, 0))
+        return tuple(zip(Point(0, 0), Point(self.radius, 0)))
 
     def plot_annex(self, axes: Axes, deg=0, delta_y=0):
         axes.plot(*self.radius_coord, color='red', label=f'radius {self.radius:.2f}')
@@ -118,6 +118,39 @@ class Circle(BaseFigure):
         axes.plot(*self.get_coord())
         self.plot_annex(axes)
 
+        image = self.get_base64()
+        plt.close(figure)
+
+        return image
+
+
+class Sphere(Circle):
+    __slots__ = ['radius']
+
+    def __init__(self, *args, **kwargs):
+        super(Sphere, self).__init__(*args, **kwargs)
+
+    def get_volume(self) -> number:
+        return 4 * self.radius * self.get_area() / 3
+
+    def get_summary(self):
+        return f'Объём: {self.get_volume():.2f}'
+
+    def get_coord(self):
+        u, v = np.mgrid[0:2 * np.pi:20j, 0:np.pi:10j]
+        x = self.radius * np.cos(u) * np.sin(v)
+        y = self.radius * np.sin(u) * np.sin(v)
+        z = self.radius * np.cos(v)
+        return x, y, z
+
+    def plot(self, roof=True, wireframe=False):
+        figure, axes = self.get_figure(projection='3d')
+        xs, ys, zs = self.get_coord()
+
+        axes.set_box_aspect((np.ptp(xs), np.ptp(ys), np.ptp(zs)))
+        axes.plot_wireframe(xs, ys, zs)
+
+        self.plot_annex(axes)
         image = self.get_base64()
         plt.close(figure)
 
@@ -256,6 +289,47 @@ class Parallelogram(BaseFigure):
         return image
 
 
+class Parallelepiped(Parallelogram):
+    __slots__ = ['a', 'b', 'angle', 'height']
+
+    def __init__(self, a: number, b: number, angle: number, height: number):
+        super().__init__(a, b, angle)
+        self.height = height
+
+    def get_volume(self):
+        return self.get_area() * self.height
+
+    def get_summary(self):
+        return f'Объём: {self.get_volume():.2f}'
+
+    def get_coord(self):
+        coord = super(Parallelepiped, self).get_coord()
+        coord = (*coord, coord[0])
+        x = np.array([[crd.x] * 5 for crd in coord])
+        y = np.array([[crd.y] * 5 for crd in coord])
+        z = np.array([np.linspace(0, self.height, 5) for _ in range(5)])
+
+        return x, y, z
+
+    def plot(self, roof=True, wireframe=False):
+        figure, axes = self.get_figure(projection='3d')
+
+        coord = np.array(self.get_coord())
+
+        roof_coord = super(Parallelepiped, self).get_coord()
+        roof = patches.Polygon(xy=roof_coord, alpha=0.7)
+        axes.add_patch(roof)
+        art3d.pathpatch_2d_to_3d(roof, z=self.height, zdir='z')
+
+        axes.set_box_aspect([np.ptp(axis) for axis in coord])
+        axes.plot_surface(*coord, color='b', alpha=0.5)
+
+        image = self.get_base64()
+        plt.close(figure)
+
+        return image
+
+
 class Square(Parallelogram):
     __slots__ = ['a']
 
@@ -269,6 +343,19 @@ class Square(Parallelogram):
     def get_sub_coord(self):
         coord = (self.get_coord()[3], self.get_coord()[1])
         return zip(*coord), f'diagonal {self.diagonal:.2f}'
+
+
+class Cube(Parallelepiped):
+    __slots__ = ['a']
+
+    def __init__(self, a: number = 5, **_):
+        super().__init__(a, a, 90, a)
+
+    def get_volume(self) -> number:
+        return self.get_area() * self.a
+
+    def get_summary(self):
+        return f'Объём: {self.get_volume():.2f}'
 
 
 class Triangle(Parallelogram):
@@ -396,7 +483,7 @@ class Pyramid(Rhombus):
             [coord[2], coord[1], coord[4]],
             [coord[2], coord[3], coord[4]]
         ]
-        pyramid = art3d.Poly3DCollection(verts, linewidths=1, edgecolors='g', alpha=.3)
+        pyramid = art3d.Poly3DCollection(verts, linewidths=1, edgecolors='g', alpha=.5)
         axes.add_collection3d(pyramid)
 
         self.plot_annex(axes)

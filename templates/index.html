@@ -9,7 +9,9 @@
 <main class="container mt-2">
     <article class="row">
         <section class="col-8">
-            <img src="data:image/jpeg;base64,{{ img }}" alt="{{ choose }}">
+            <div class="text-center">
+                <img src="data:image/jpeg;base64,{{ img }}" alt="{{ choose }}">
+            </div>
             {% set summary_text = summary.split() %}
             <div class="text-center">
                 <strong>{{ summary_text[0] }}</strong> {{ summary_text[1] }}
@@ -26,8 +28,11 @@
                         <option value="{{ figure }}" {{ slc }}>{{ figure }}</option>
                     {% endfor %}
                 </select>
+                {% set desc = {'angle': '\u03B1'} %}
                 {% for slot in slots %}
-                    <label for="{{ slot }}" class="form-label mt-3">{{ slot }}</label>
+                    <label for="{{ slot }}" class="form-label mt-3">
+                        {{ slot }} {{ desc.get(slot, '') }}
+                    </label>
                     <div class="input-group mb-3">
                         <input
                                 type="text" class="form-control"
@@ -36,6 +41,11 @@
                                 value="{{ slots[slot] }}"
                         >
                     </div>
+                    {% if  errors[slot] %}
+                        <div class="alert alert-danger py-1" role="alert">
+                            {{ errors[slot] }}
+                        </div>
+                    {% endif %}
                 {% endfor %}
                 <button class="btn btn-primary">
                     Send
