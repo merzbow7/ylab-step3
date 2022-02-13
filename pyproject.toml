@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "ylab-step3"
-version = "0.1.0"
+version = "0.8.0"
 description = "Y Lab step 3 Homework"
 authors = ["Sevenamber <sevenamber@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.10"
 Flask = "^2.0.2"
 matplotlib = "^3.5.1"
 numpy = "^1.22.2"

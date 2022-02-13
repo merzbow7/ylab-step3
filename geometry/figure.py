@@ -12,8 +12,7 @@ from typing import NamedTuple
 import matplotlib.pyplot as plt
 import mpl_toolkits.mplot3d.art3d as art3d
 import numpy as np
-from matplotlib import patches
-from matplotlib import transforms
+from matplotlib import patches, transforms
 from matplotlib.axes import Axes
 
 number = int | float

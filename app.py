@@ -1,7 +1,7 @@
 import base64
 from pathlib import Path
 
-from flask import Flask, request, render_template
+from flask import Flask, render_template, request
 
 from geometry import figure
 
