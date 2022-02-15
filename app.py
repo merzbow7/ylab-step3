@@ -5,7 +5,7 @@ from flask import Flask, render_template, request
 
 from geometry import figure
 
-app = Flask("__file__")
+app = Flask(__name__)
 
 
 def einstein() -> str:
@@ -59,5 +59,8 @@ def index() -> str:
                            figures=figure.__all__)
 
 
-if __name__ == '__main__':
-    app.run()
+def main(*args, **kwargs):
+    print(f'{args=}')
+    print(f'{kwargs=}')
+    app.run(debug=False)
+
