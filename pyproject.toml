@@ -5,7 +5,7 @@ description = "Y Lab step 3 Homework"
 authors = ["Sevenamber <sevenamber@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "3.8.1"
+python = "3.10.2"
 Flask = "^2.0.2"
 matplotlib = "^3.5.1"
 numpy = "^1.22.2"
