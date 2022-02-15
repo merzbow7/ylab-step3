@@ -93,7 +93,7 @@ flake8 = ">3.0.0"
 
 [[package]]
 name = "flask"
-version = "2.0.2"
+version = "2.0.3"
 description = "A simple framework for building complex web applications."
 category = "main"
 optional = false
@@ -251,7 +251,12 @@ optional = false
 python-versions = ">=3.8"
 
 [package.dependencies]
-numpy = {version = ">=1.21.0", markers = "python_version >= \"3.10\""}
+numpy = [
+    {version = ">=1.18.5", markers = "platform_machine != \"aarch64\" and platform_machine != \"arm64\" and python_version < \"3.10\""},
+    {version = ">=1.19.2", markers = "platform_machine == \"aarch64\" and python_version < \"3.10\""},
+    {version = ">=1.20.0", markers = "platform_machine == \"arm64\" and python_version < \"3.10\""},
+    {version = ">=1.21.0", markers = "python_version >= \"3.10\""},
+]
 python-dateutil = ">=2.8.1"
 pytz = ">=2020.1"
 
@@ -365,8 +370,8 @@ watchdog = ["watchdog"]
 
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.10"
-content-hash = "21f1ef2ec28a0a1a685b5ea753f73fed24841322fe5527d7f78765f264f6694f"
+python-versions = "^3.8.1"
+content-hash = "47745723c17405fbe1dd88bc9fa7aa578ab77830e42dee57332064a1989a04bc"
 
 [metadata.files]
 autopep8 = [
@@ -405,8 +410,8 @@ flake8-spellcheck = [
     {file = "flake8_spellcheck-0.24.0-py2.py3-none-any.whl", hash = "sha256:33d1727e4edb2b0cda3a78dee467d7bde53ff5a2a90056bc7d1764e0b060f331"},
 ]
 flask = [
-    {file = "Flask-2.0.2-py3-none-any.whl", hash = "sha256:cb90f62f1d8e4dc4621f52106613488b5ba826b2e1e10a33eac92f723093ab6a"},
-    {file = "Flask-2.0.2.tar.gz", hash = "sha256:7b2fb8e934ddd50731893bdcdb00fc8c0315916f9fcd50d22c7cc1a95ab634e2"},
+    {file = "Flask-2.0.3-py3-none-any.whl", hash = "sha256:59da8a3170004800a2837844bfa84d49b022550616070f7cb1a659682b2e7c9f"},
+    {file = "Flask-2.0.3.tar.gz", hash = "sha256:e1120c228ca2f553b470df4a5fa927ab66258467526069981b3eb0a91902687d"},
 ]
 fonttools = [
     {file = "fonttools-4.29.1-py3-none-any.whl", hash = "sha256:1933415e0fbdf068815cb1baaa1f159e17830215f7e8624e5731122761627557"},
